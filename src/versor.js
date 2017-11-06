@@ -39,10 +39,12 @@ versor.rotation = function(q) {
 };
 
 // Returns the quaternion to rotate between two cartesian points on the sphere.
-versor.delta = function(v0, v1) {
+// alpha for tweening [0,1]
+versor.delta = function(v0, v1, alpha) {
+  if (arguments.length == 2) alpha = 1;
   var w = cross(v0, v1), l = sqrt(dot(w, w));
   if (!l) return [1, 0, 0, 0];
-  var t = acos(max(-1, min(1, dot(v0, v1)))) / 2, s = sin(t); // t = θ / 2
+  var t = alpha * acos(max(-1, min(1, dot(v0, v1)))) / 2, s = sin(t); // t = θ / 2
   return [cos(t), w[2] / l * s, -w[1] / l * s, w[0] / l * s];
 };
 
