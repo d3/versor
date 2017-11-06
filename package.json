@@ -1,0 +1,39 @@
+{
+  "name": "versor",
+  "version": "0.0.0",
+  "description": "Versor",
+  "keywords": [
+    "d3",
+    "d3-module",
+    "d3-geo",
+    "versor"
+  ],
+  "license": "MIT",
+  "main": "build/versor.js",
+  "unpkg": "build/versor.js",
+  "jsdelivr": "build/versor.js",
+  "module": "index",
+  "jsnext:main": "index",
+  "homepage": "https://github.com/Fil/versor",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fil/versor.git"
+  },
+  "author": {
+    "name": "Mike Bostock",
+    "url": "https://github.com/mbostock"
+  },
+  "scripts": {
+    "pretest": "rm -rf build && mkdir build && rollup --banner \"$(preamble)\" -f umd -n versor -o build/versor.js -- src/versor.js",
+    "test": "tape 'test/**/*-test.js'",
+    "prepublishOnly": "npm run test && uglifyjs --preamble \"$(preamble)\" build/versor.js -c negate_iife=false -m -o build/versor.min.js",
+    "postpublish": "zip -j build/versor.zip -- LICENSE README.md build/versor.js build/versor.min.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "package-preamble": "0.1",
+    "rollup": "0.49",
+    "tape": "4",
+    "uglify-js": "*"
+  }
+}
