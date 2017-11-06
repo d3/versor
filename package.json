@@ -27,7 +27,7 @@
     "pretest": "rm -rf build && mkdir build && rollup --banner \"$(preamble)\" -f umd -n versor -o build/versor.js -- src/versor.js",
     "test": "tape 'test/**/*-test.js'",
     "prepublishOnly": "npm run test && uglifyjs --preamble \"$(preamble)\" build/versor.js -c negate_iife=false -m -o build/versor.min.js",
-    "postpublish": "zip -j build/versor.zip -- LICENSE README.md build/versor.js build/versor.min.js"
+    "postpublish": "zip -j build/versor.zip -- LICENSE.txt README.md build/versor.js build/versor.min.js"
   },
   "dependencies": {},
   "devDependencies": {
