@@ -12,8 +12,8 @@
   "main": "build/versor.js",
   "unpkg": "build/versor.js",
   "jsdelivr": "build/versor.js",
-  "module": "index",
-  "jsnext:main": "index",
+  "module": "src/versor.js",
+  "jsnext:main": "src/versor.js",
   "homepage": "https://github.com/Fil/versor",
   "repository": {
     "type": "git",
