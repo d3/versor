@@ -8,7 +8,7 @@
     "d3-geo",
     "versor"
   ],
-  "license": "MIT",
+  "license": "GPL-3.0",
   "main": "build/versor.js",
   "unpkg": "build/versor.min.js",
   "jsdelivr": "build/versor.min.js",
