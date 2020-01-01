@@ -7,7 +7,6 @@ var acos = Math.acos,
     min = Math.min,
     PI = Math.PI,
     sin = Math.sin,
-    sqrt = Math.sqrt,
     radians = PI / 180,
     degrees = 180 / PI;
 
@@ -31,9 +30,9 @@ class Versor {
   }
   static toAngles([a, b, c, d]) {
     return [
-      atan2(2 * (a * b + c * d), 1 - 2 * (b * b + c * c)) * 180 / PI,
-      asin(max(-1, min(1, 2 * (a * c - d * b)))) * 180 / PI,
-      atan2(2 * (a * d + b * c), 1 - 2 * (c * c + d * d)) * 180 / PI
+      atan2(2 * (a * b + c * d), 1 - 2 * (b * b + c * c)) * degrees,
+      asin(max(-1, min(1, 2 * (a * c - d * b)))) * degrees,
+      atan2(2 * (a * d + b * c), 1 - 2 * (c * c + d * d)) * degrees
     ];
   }
   static interpolateAngles(a, b) {

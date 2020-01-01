@@ -1,6 +1,6 @@
 {
   "name": "versor",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Versor",
   "keywords": [
     "d3",
@@ -24,16 +24,16 @@
     "url": "https://github.com/mbostock"
   },
   "scripts": {
-    "pretest": "rm -rf dist && mkdir dist && rollup --banner \"$(preamble)\" -f umd -n versor -o dist/versor.js -- src/versor.js",
-    "test": "tape 'test/**/*-test.js'",
-    "prepublishOnly": "npm run test && uglifyjs --preamble \"$(preamble)\" dist/versor.js -c negate_iife=false -m -o dist/versor.min.js",
+    "pretest": "rollup -c",
+    "test": "tape 'test/**/*-test.js' && eslint src",
+    "prepublishOnly": "rm -rf dist && yarn test",
     "postpublish": "zip -j dist/versor.zip -- LICENSE.txt README.md dist/versor.js dist/versor.min.js"
   },
   "dependencies": {},
   "devDependencies": {
-    "package-preamble": "0.1.0",
-    "rollup": "0.66.6",
-    "tape": "4.9.1",
-    "uglify-js": "3.4.9"
+    "eslint": "6",
+    "rollup": "1",
+    "rollup-plugin-terser": "5",
+    "tape": "4"
   }
 }
