@@ -9,9 +9,9 @@
     "versor"
   ],
   "license": "GPL-3.0",
-  "main": "build/versor.js",
-  "unpkg": "build/versor.min.js",
-  "jsdelivr": "build/versor.min.js",
+  "main": "dist/versor.js",
+  "unpkg": "dist/versor.min.js",
+  "jsdelivr": "dist/versor.min.js",
   "module": "src/versor.js",
   "jsnext:main": "src/versor.js",
   "homepage": "https://github.com/Fil/versor",
@@ -24,10 +24,10 @@
     "url": "https://github.com/mbostock"
   },
   "scripts": {
-    "pretest": "rm -rf build && mkdir build && rollup --banner \"$(preamble)\" -f umd -n versor -o build/versor.js -- src/versor.js",
+    "pretest": "rm -rf dist && mkdir dist && rollup --banner \"$(preamble)\" -f umd -n versor -o dist/versor.js -- src/versor.js",
     "test": "tape 'test/**/*-test.js'",
-    "prepublishOnly": "npm run test && uglifyjs --preamble \"$(preamble)\" build/versor.js -c negate_iife=false -m -o build/versor.min.js",
-    "postpublish": "zip -j build/versor.zip -- LICENSE.txt README.md build/versor.js build/versor.min.js"
+    "prepublishOnly": "npm run test && uglifyjs --preamble \"$(preamble)\" dist/versor.js -c negate_iife=false -m -o dist/versor.min.js",
+    "postpublish": "zip -j dist/versor.zip -- LICENSE.txt README.md dist/versor.js dist/versor.min.js"
   },
   "dependencies": {},
   "devDependencies": {
