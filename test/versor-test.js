@@ -26,13 +26,15 @@ tape("90° versors", function(test) {
 });
 
 tape("delta", function(test) {
-  var v0 = versor([ 0, 0, 0 ]), v1 = versor([ 90, 0, 0 ]);
-  test.ok(distance2(versor.delta(v0,v1), [ 0.92388, 0.38268, 0, 0 ]) < 1e-8);
+  var a = versor.cartesian([ 0, 0 ]), b = versor.cartesian([ 90, 0 ]);
+  test.ok(distance2(versor.delta(a,b), [ 0.7071, 0.7071, 0, 0 ]) < 1e-8);
+  b = versor.cartesian([ 0, 90 ]);
+  test.ok(distance2(versor.delta(a,b), [ 0.7071, 0, 0.7071, 0 ]) < 1e-8);
   test.end();
 });
 
 tape("delta tweening", function(test) {
-  var v0 = versor([ 0, 0, 0 ]), v1 = versor([ 90, 0, 0 ]);
-  test.ok(distance2(versor.delta(v0,v1,0.5), [ 0.98078, 0.19509, 0, 0 ]) < 1e-8);
+  var a = versor.cartesian([ 0, 0 ]), b = versor.cartesian([ 90, 0 ]);
+  test.ok(distance2(versor.delta(a,b,0.5), [ 0.9239, 0.3827, 0, 0 ]) < 1e-8);
   test.end();
 });
