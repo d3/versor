@@ -6,7 +6,7 @@ The naïve method uses `mouse.x` and `mouse.y` as proxies for longitude and lati
 
 The correct solution is to track the spherical coordinates of the point that is under the mouse, and apply a rotation to the globe that will move the initial point to the current mouse position. Computing that rotation involves quaternions.
 
-This method, introduced by [Jason Davies](https://www.jasondavies.com/maps/rotate/) and Mike Bostock, is called [versor dragging](https://bl.ocks.org/mbostock/7ea1dde508cec6d2d95306f92642bc42).
+This method, introduced by [Jason Davies](https://www.jasondavies.com/maps/rotate/) and Mike Bostock, is called [versor dragging](https://gist.github.com/mbostock/7ea1dde508cec6d2d95306f92642bc42).
 
 This module contains the quaternion & versor functions. For a directly usable package, see [d3-inertia](https://github.com/Fil/d3-inertia).
 
