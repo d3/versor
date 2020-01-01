@@ -12,6 +12,9 @@ var acos = Math.acos,
     degrees = 180 / PI;
 
 class Versor {
+  static fromCartesian([x, y, z]) {
+    return [0, z, -y, x];
+  }
   static fromAngles([l, p, g]) {
     l *= radians / 2;
     p *= radians / 2;
@@ -102,22 +105,11 @@ versor.cartesian = function(e) {
 
 // Returns the quaternion to rotate between two cartesian points on the sphere.
 // alpha for tweening [0,1]
-versor.delta = function(v0, v1, alpha) {
-  if (arguments.length == 2) alpha = 1;
-  var w = cross(v0, v1), l = sqrt(Versor.dot(w, w));
-  if (!l) return [1, 0, 0, 0];
-  var t = alpha * acos(max(-1, min(1, Versor.dot(v0, v1)))) / 2, s = sin(t); // t = θ / 2
-  return [cos(t), w[2] / l * s, -w[1] / l * s, w[0] / l * s];
+versor.delta = function(v0, v1, alpha = 1) {
+  var a = Versor.fromCartesian(v1),
+    b = Versor.fromCartesian(v0.map(function(d) { return -d; })),
+    i = Versor.interpolate([1,0,0,0], Versor.multiply(a, b));
+  return i(alpha/2);
 };
-
-// Why only 3 dimensions??? TBD
-function cross(v0, v1) {
-  return [
-    v0[1] * v1[2] - v0[2] * v1[1],
-    v0[2] * v1[0] - v0[0] * v1[2],
-    v0[0] * v1[1] - v0[1] * v1[0],
-    0
-  ];
-}
 
 export default versor;
