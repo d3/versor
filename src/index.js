@@ -1,4 +1,4 @@
-var acos = Math.acos,
+const acos = Math.acos,
     asin = Math.asin,
     atan2 = Math.atan2,
     cos = Math.cos,
@@ -85,7 +85,7 @@ class Versor {
  */
 
 // Returns the unit quaternion for the given Euler rotation angles [λ, φ, γ].
-var versor = Versor.fromAngles;
+const versor = Versor.fromAngles;
 
 // Returns the quaternion that represents q0 * q1.
 versor.multiply = Versor.multiply;
@@ -98,7 +98,7 @@ versor.interpolate = Versor.interpolateAngles;
 
 // Returns Cartesian coordinates [x, y, z] given spherical coordinates [λ, φ].
 versor.cartesian = function(e) {
-  var l = e[0] * radians, p = e[1] * radians, cp = cos(p);
+  const l = e[0] * radians, p = e[1] * radians, cp = cos(p);
   return [cp * cos(l), cp * sin(l), sin(p)];
 };
 
@@ -116,9 +116,9 @@ versor.delta = function(v0, v1, alpha) {
     return v0[0] * v1[0] + v0[1] * v1[1] + v0[2] * v1[2];
   }
 
-  var w = cross(v0, v1), l = sqrt(dot(w, w));
+  const w = cross(v0, v1), l = sqrt(dot(w, w));
   if (!l) return [1, 0, 0, 0];
-  var t = alpha * acos(max(-1, min(1, dot(v0, v1)))) / 2, s = sin(t); // t = θ / 2
+  const t = alpha * acos(max(-1, min(1, dot(v0, v1)))) / 2, s = sin(t); // t = θ / 2
   return [cos(t), w[2] / l * s, -w[1] / l * s, w[0] / l * s];
 };
 

@@ -52,13 +52,21 @@ versor.rotation(q01); // [90, 0, 90]
 
 ```
 
-In a browser:
+If you use npm, `npm install versor`. You can also download the [latest release on GitHub](https://github.com/d3/versor/releases/latest). For vanilla HTML in modern browsers, import versor from Skypack:
 
 ```html
-<!DOCTYPE html>
-<script src="https://unpkg.com/versor"></script>
-<script>
+<script type="module">
+  import versor from "https://cdn.skypack.dev/versor@0.2";
+  const t = versor([90,0,0]);
+</script>
+```
 
+For legacy environments, you can load versor’s UMD bundle from an npm-based CDN such as jsDelivr; a `versor` global is exported:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/versor@0.2"></script>
+<script>
+  
 versor([90,0,0]);
 
 </script>
