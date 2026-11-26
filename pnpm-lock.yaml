@@ -11,6 +11,9 @@ importers:
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.15.0)
+      '@rollup/plugin-json':
+        specifier: ^6.1.0
+        version: 6.1.0(rollup@4.68.8)
       '@rollup/plugin-node-resolve':
         specifier: ^16.0.3
         version: 16.0.3(rollup@4.68.8)
@@ -246,6 +249,15 @@ packages:
 
   '@rolldown/pluginutils@1.1.1':
     resolution: {integrity: sha512-glFIJDvLNDtJhT9qrMFWLPbvS+skxgt4L0K8Ei2YtnhPysAJnsI7nyxSJxKj4ADeKX0OLjC4ntRkwpLOoS3rwA==}
+
+  '@rollup/plugin-json@6.1.0':
+    resolution: {integrity: sha512-EGI2te5ENk1coGeADSIwZ7G2Q8CJS2sF120T7jLw4xFw9n7wIOXHo+kIYRAoVpJAN+kmqZSoO3Fp4JtoNF4ReA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
 
   '@rollup/plugin-node-resolve@16.0.3':
     resolution: {integrity: sha512-lUYM3UBGuM93CnMPG1YocWu7X802BrNF3jW2zny5gQyLQgRFJhV1Sq0Zi74+dh/6NBx1DxFC4b4GXg9wUCG5Qg==}
@@ -1259,6 +1271,12 @@ snapshots:
     optional: true
 
   '@rolldown/pluginutils@1.1.1': {}
+
+  '@rollup/plugin-json@6.1.0(rollup@4.68.8)':
+    dependencies:
+      '@rollup/pluginutils': 5.5.1(rollup@4.68.8)
+    optionalDependencies:
+      rollup: 4.68.8
 
   '@rollup/plugin-node-resolve@16.0.3(rollup@4.68.8)':
     dependencies:

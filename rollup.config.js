@@ -1,4 +1,5 @@
 import {readFileSync} from "node:fs";
+import RollupJson from "@rollup/plugin-json";
 import RollupNode from "@rollup/plugin-node-resolve";
 import RollupTerser from "@rollup/plugin-terser";
 import RollupTypescript from "@rollup/plugin-typescript";
@@ -30,6 +31,7 @@ function config(options) {
       banner
     },
     plugins: [
+      RollupJson(),
       RollupNode(),
       RollupTypescript({tsconfig: "./tsconfig.build.json", declaration: false, emitDeclarationOnly: false, outDir: undefined, rootDir: undefined}),
       ...(options.plugins ?? [])
