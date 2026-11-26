@@ -48,6 +48,9 @@ q01 = versor.multiply(q0, q1); // [0.5, 0.5, 0.5, 0.5]
 // Euler rotation angles [λ, φ, γ] for the given quaternion.
 versor.rotation(q01); // [90, 0, 90]
 
+// At the poles (φ = ±90°), only λ - γ (north) or λ + γ (south) is defined; γ is then 0.
+versor.rotation(versor([30, 90, -30])); // [60, 90, 0]
+
 
 
 ```
