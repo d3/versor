@@ -14,7 +14,7 @@ This module contains the quaternion & versor functions. For a directly usable pa
 In Node:
 
 ```js
-const versor = require("versor");
+import versor from "versor";
 
 // interpolate angles (slerp), see https://observablehq.com/@d3/world-tour
 versor.interpolate(rotation0, rotation1); // function of (t)
@@ -52,11 +52,11 @@ versor.rotation(q01); // [90, 0, 90]
 
 ```
 
-If you use npm, `npm install versor`. You can also download the [latest release on GitHub](https://github.com/d3/versor/releases/latest). For vanilla HTML in modern browsers, import versor from Skypack:
+If you use npm, `npm install versor`. You can also download the [latest release on GitHub](https://github.com/d3/versor/releases/latest). For vanilla HTML in modern browsers, import versor from esm.sh:
 
 ```html
 <script type="module">
-  import versor from "https://cdn.skypack.dev/versor@0.2";
+  import versor from "https://esm.sh/versor@0.2";
   const t = versor([90,0,0]);
 </script>
 ```
