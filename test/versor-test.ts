@@ -1,6 +1,7 @@
 import assert from "node:assert";
 import {it} from "vitest";
 import versor from "../src/index.js";
+import {version} from "../package.json";
 
 function distance2 (a: readonly number[], b: readonly number[]): number {
   return a
@@ -13,6 +14,11 @@ it("versor offers functions", () => {
   assert.strictEqual(typeof versor.cartesian, 'function');
   assert.strictEqual(typeof versor.rotation, 'function');
   assert.strictEqual(typeof versor.delta, 'function');
+});
+
+it("versor.version is the package version", () => {
+  assert.strictEqual(versor.version, version);
+  assert.match(versor.version, /^\d+\.\d+\.\d+/);
 });
 
 it("90° versors", () => {

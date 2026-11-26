@@ -1,3 +1,5 @@
+import {version} from "../package.json";
+
 /** A quaternion [q0, q1, q2, q3]; a versor (unit quaternion) represents a rotation. */
 export type Quaternion = [q0: number, q1: number, q2: number, q3: number];
 
@@ -132,9 +134,13 @@ export interface VersorFunction {
    * see https://github.com/Fil/versor/issues/8
    */
   delta(v0: Readonly<Cartesian>, v1: Readonly<Cartesian>, alpha?: number): Quaternion;
+
+  /** The version of versor, such as "1.0.0". */
+  readonly version: string;
 }
 
 const versor: VersorFunction = Object.assign(Versor.fromAngles, {
+  version,
   multiply: Versor.multiply,
   rotation: Versor.toAngles,
   interpolate: Versor.interpolateAngles,

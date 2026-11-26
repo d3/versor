@@ -51,6 +51,9 @@ versor.rotation(q01); // [90, 0, 90]
 // At the poles (φ = ±90°), only λ - γ (north) or λ + γ (south) is defined; γ is then 0.
 versor.rotation(versor([30, 90, -30])); // [60, 90, 0]
 
+// the version of versor
+versor.version; // "1.0.0"
+
 
 
 ```
