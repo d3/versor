@@ -59,7 +59,7 @@ If you use npm, `npm install versor`; versor is written in TypeScript, and the p
 
 ```html
 <script type="module">
-  import versor from "https://esm.sh/versor@0.2";
+  import versor from "https://esm.sh/versor@1";
   const t = versor([90,0,0]);
 </script>
 ```
@@ -67,7 +67,7 @@ If you use npm, `npm install versor`; versor is written in TypeScript, and the p
 For legacy environments, you can load versor’s UMD bundle from an npm-based CDN such as jsDelivr; a `versor` global is exported:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/versor@0.2"></script>
+<script src="https://cdn.jsdelivr.net/npm/versor@1"></script>
 <script>
   
 versor([90,0,0]);
