@@ -1,11 +1,11 @@
 {
   "name": "versor",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Versor",
-  "homepage": "https://github.com/Fil/versor",
+  "homepage": "https://github.com/d3/versor",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Fil/versor.git"
+    "url": "https://github.com/d3/versor.git"
   },
   "keywords": [
     "d3",
@@ -19,27 +19,34 @@
     "url": "https://github.com/mbostock"
   },
   "type": "module",
-  "module": "src/index.js",
-  "main": "src/index.js",
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.mjs"
+  ],
+  "module": "dist/versor.mjs",
+  "main": "dist/versor.mjs",
   "jsdelivr": "dist/versor.min.js",
   "unpkg": "dist/versor.min.js",
   "exports": {
     "umd": "./dist/versor.min.js",
-    "default": "./src/index.js"
+    "default": "./dist/versor.mjs"
   },
-  "dependencies": {},
+  "sideEffects": false,
   "devDependencies": {
-    "eslint": "7",
-    "mocha": "8",
-    "rollup": "2",
-    "rollup-plugin-terser": "5"
+    "@eslint/js": "^10.0.1",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-terser": "^1.0.2",
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0",
+    "rollup": "^4.67.4",
+    "vitest": "^5.1.0"
   },
   "scripts": {
-    "test": "mocha 'test/**/*-test.js' && eslint src test",
-    "prepublishOnly": "rm -rf dist && yarn test && rollup -c"
+    "test": "vitest",
+    "lint": "eslint",
+    "prepublishOnly": "rm -rf dist && rollup -c"
   },
   "engines": {
     "node": ">=12"
-  },
-  "jsnext:main": "src/index.js"
+  }
 }

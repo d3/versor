@@ -1,4 +1,5 @@
-import assert from "assert";
+import assert from "node:assert";
+import {it} from "vitest";
 import versor from "../src/index.js";
 
 function distance2 (a,b) {
