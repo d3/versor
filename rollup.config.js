@@ -1,6 +1,7 @@
 import {readFileSync} from "node:fs";
 import RollupNode from "@rollup/plugin-node-resolve";
 import RollupTerser from "@rollup/plugin-terser";
+import RollupTypescript from "@rollup/plugin-typescript";
 import meta from "./package.json" with {type: "json"};
 
 // Extract copyrights from the LICENSE.
@@ -21,7 +22,7 @@ const terser = RollupTerser({
 function config(options) {
   return {
     ...options,
-    input: "src/index.js",
+    input: "src/index.ts",
     output: {
       ...options.output,
       name: "versor",
@@ -30,6 +31,7 @@ function config(options) {
     },
     plugins: [
       RollupNode(),
+      RollupTypescript({tsconfig: "./tsconfig.build.json", declaration: false, emitDeclarationOnly: false, outDir: undefined, rootDir: undefined}),
       ...(options.plugins ?? [])
     ]
   };

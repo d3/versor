@@ -1,0 +1,160 @@
+/** A quaternion [q0, q1, q2, q3]; a versor (unit quaternion) represents a rotation. */
+export type Quaternion = [q0: number, q1: number, q2: number, q3: number];
+
+/** Euler rotation angles [λ, φ, γ] in degrees, as in d3.geoRotation; γ defaults to 0. */
+export type Angles = [lambda: number, phi: number, gamma?: number];
+
+/** Cartesian coordinates [x, y, z]. */
+export type Cartesian = [x: number, y: number, z: number];
+
+/** Spherical coordinates [λ, φ] (longitude, latitude) in degrees. */
+export type Spherical = [lambda: number, phi: number];
+
+const acos = Math.acos,
+    atan2 = Math.atan2,
+    cos = Math.cos,
+    hypot = Math.hypot,
+    max = Math.max,
+    min = Math.min,
+    PI = Math.PI,
+    sin = Math.sin,
+    sqrt = Math.sqrt,
+    radians = PI / 180,
+    degrees = 180 / PI,
+    epsilon = 1e-12;
+
+function wrap(x: number): number {
+  return x > PI ? x - 2 * PI : x < -PI ? x + 2 * PI : x;
+}
+
+class Versor {
+  static fromCartesian([x, y, z]: Readonly<Cartesian>): Quaternion {
+    return [0, z, -y, x];
+  }
+  static fromAngles([l, p, g]: Readonly<Angles>): Quaternion {
+    l *= radians / 2;
+    p *= radians / 2;
+    g = (g||0) * radians / 2;
+    const sl = sin(l), cl = cos(l);
+    const sp = sin(p), cp = cos(p);
+    const sg = sin(g), cg = cos(g);
+    return [
+      cl * cp * cg + sl * sp * sg,
+      sl * cp * cg - cl * sp * sg,
+      cl * sp * cg + sl * cp * sg,
+      cl * cp * sg - sl * sp * cg
+    ];
+  }
+  // (λ + γ) / 2 is undetermined at the north pole, and (λ - γ) / 2 at the south
+  // pole (gimbal lock); at a pole, γ = 0 and λ carries the whole rotation.
+  static toAngles([a, b, c, d]: Readonly<Quaternion>): [lambda: number, phi: number, gamma: number] {
+    const x0 = a - c, y0 = b + d, x1 = a + c, y1 = b - d,
+        n = sqrt(x0 * x0 + y0 * y0), // zero at the north pole
+        s = sqrt(x1 * x1 + y1 * y1); // zero at the south pole
+    let u = atan2(y0, x0), // (λ + γ) / 2
+        v = atan2(y1, x1); // (λ - γ) / 2
+    if (n <= epsilon * s) u = v;
+    else if (s <= epsilon * n) v = u;
+    return [
+      wrap(u + v) * degrees,
+      (2 * atan2(s, n) - PI / 2) * degrees,
+      wrap(u - v) * degrees
+    ];
+  }
+  static interpolateAngles(a: Readonly<Angles>, b: Readonly<Angles>): (t: number) => [lambda: number, phi: number, gamma: number] {
+    const i = Versor.interpolate(Versor.fromAngles(a), Versor.fromAngles(b));
+    return t => Versor.toAngles(i(t));
+  }
+  static interpolateLinear([a1, b1, c1, d1]: Readonly<Quaternion>, [a2, b2, c2, d2]: Readonly<Quaternion>): (t: number) => Quaternion {
+    a2 -= a1, b2 -= b1, c2 -= c1, d2 -= d1;
+    const x: Quaternion = [0, 0, 0, 0];
+    return t => {
+      const l = hypot(x[0] = a1 + a2 * t, x[1] = b1 + b2 * t, x[2] = c1 + c2 * t, x[3] = d1 + d2 * t);
+      x[0] /= l, x[1] /= l, x[2] /= l, x[3] /= l;
+      return x;
+    };
+  }
+  static interpolate([a1, b1, c1, d1]: Readonly<Quaternion>, [a2, b2, c2, d2]: Readonly<Quaternion>): (t: number) => Quaternion {
+    let dot = Versor.dot([a1, b1, c1, d1], [a2, b2, c2, d2]);
+    if (dot < 0) a2 = -a2, b2 = -b2, c2 = -c2, d2 = -d2, dot = -dot;
+    if (dot > 0.9995) return Versor.interpolateLinear([a1, b1, c1, d1], [a2, b2, c2, d2]);
+    const theta0 = acos(max(-1, min(1, dot)));
+    const x: Quaternion = [0, 0, 0, 0];
+    const l = hypot(a2 -= a1 * dot, b2 -= b1 * dot, c2 -= c1 * dot, d2 -= d1 * dot);
+    a2 /= l, b2 /= l, c2 /= l, d2 /= l;
+    return t => {
+      const theta = theta0 * t;
+      const s = sin(theta);
+      const c = cos(theta);
+      x[0] = a1 * c + a2 * s;
+      x[1] = b1 * c + b2 * s;
+      x[2] = c1 * c + c2 * s;
+      x[3] = d1 * c + d2 * s;
+      return x;
+    };
+  }
+  static dot([a1, b1, c1, d1]: Readonly<Quaternion>, [a2, b2, c2, d2]: Readonly<Quaternion>): number {
+    return a1 * a2 + b1 * b2 + c1 * c2 + d1 * d2;
+  }
+  static multiply([a1, b1, c1, d1]: Readonly<Quaternion>, [a2, b2, c2, d2]: Readonly<Quaternion>): Quaternion {
+    return [
+      a1 * a2 - b1 * b2 - c1 * c2 - d1 * d2,
+      a1 * b2 + b1 * a2 + c1 * d2 - d1 * c2,
+      a1 * c2 - b1 * d2 + c1 * a2 + d1 * b2,
+      a1 * d2 + b1 * c2 - c1 * b2 + d1 * a2
+    ];
+  }
+}
+
+/*
+ * Old API
+ */
+
+export interface VersorFunction {
+  /** Returns the unit quaternion for the given Euler rotation angles [λ, φ, γ]. */
+  (angles: Readonly<Angles>): Quaternion;
+
+  /** Returns the quaternion that represents q0 * q1. */
+  multiply(q0: Readonly<Quaternion>, q1: Readonly<Quaternion>): Quaternion;
+
+  /** Returns the Euler rotation angles [λ, φ, γ] for the given quaternion; at the poles (φ = ±90°), γ = 0. */
+  rotation(q: Readonly<Quaternion>): [lambda: number, phi: number, gamma: number];
+
+  /** Returns an interpolator between two sets of Euler rotation angles, along the shortest path. */
+  interpolate(a: Readonly<Angles>, b: Readonly<Angles>): (t: number) => [lambda: number, phi: number, gamma: number];
+
+  /** Returns Cartesian coordinates [x, y, z] given spherical coordinates [λ, φ]. */
+  cartesian(e: Readonly<Spherical>): Cartesian;
+
+  /**
+   * Returns the quaternion to rotate between two cartesian points on the sphere.
+   * alpha for tweening [0,1], defaults to 1.
+   * see https://github.com/Fil/versor/issues/8
+   */
+  delta(v0: Readonly<Cartesian>, v1: Readonly<Cartesian>, alpha?: number): Quaternion;
+}
+
+const versor: VersorFunction = Object.assign(Versor.fromAngles, {
+  multiply: Versor.multiply,
+  rotation: Versor.toAngles,
+  interpolate: Versor.interpolateAngles,
+  cartesian(e: Readonly<Spherical>): Cartesian {
+    const l = e[0] * radians, p = e[1] * radians, cp = cos(p);
+    return [cp * cos(l), cp * sin(l), sin(p)];
+  },
+  delta(v0: Readonly<Cartesian>, v1: Readonly<Cartesian>, alpha = 1): Quaternion {
+    function cross(v0: Readonly<Cartesian>, v1: Readonly<Cartesian>): Cartesian {
+      return  [v0[1] * v1[2] - v0[2] * v1[1], v0[2] * v1[0] - v0[0] * v1[2], v0[0] * v1[1] - v0[1] * v1[0]];
+    }
+    function dot(v0: Readonly<Cartesian>, v1: Readonly<Cartesian>): number {
+      return v0[0] * v1[0] + v0[1] * v1[1] + v0[2] * v1[2];
+    }
+
+    const w = cross(v0, v1), l = sqrt(dot(w, w));
+    if (!l) return [1, 0, 0, 0];
+    const t = alpha * acos(max(-1, min(1, dot(v0, v1)))) / 2, s = sin(t); // t = θ / 2
+    return [cos(t), w[2] / l * s, -w[1] / l * s, w[0] / l * s];
+  }
+});
+
+export default versor;
