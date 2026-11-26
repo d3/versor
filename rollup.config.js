@@ -1,36 +1,69 @@
-import {terser} from "rollup-plugin-terser";
-import * as meta from "./package.json";
+import {readFileSync} from "node:fs";
+import RollupNode from "@rollup/plugin-node-resolve";
+import RollupTerser from "@rollup/plugin-terser";
+import meta from "./package.json" with {type: "json"};
 
-const config = {
-  input: "src/index.js",
-  external: Object.keys(meta.dependencies || {}), //.filter(key => /^d3-/.test(key)),
+// Extract copyrights from the LICENSE.
+const copyright = readFileSync("./LICENSE", "utf-8")
+  .split(/\n/g)
+  .filter(line => /^copyright\s+/i.test(line))
+  .map(line => line.replace(/^copyright\s+/i, ""))
+  .join(", ");
+
+const banner = `// ${meta.homepage} v${meta.version} Copyright ${copyright}`;
+
+const terser = RollupTerser({
   output: {
-    file: `dist/${meta.name}.js`,
-    name: "versor",
-    format: "umd",
-    indent: false,
-    extend: true,
-    banner: `// ${meta.homepage} v${meta.version} Copyright ${(new Date).getFullYear()} ${meta.author.name}`,
-    globals: Object.assign({}, ...Object.keys(meta.dependencies || {})) //.filter(key => /^d3-/.test(key)).map(key => ({[key]: "d3"})))
-  },
-  plugins: []
-};
+    preamble: banner
+  }
+});
 
-export default [
-  config,
-  {
-    ...config,
+function config(options) {
+  return {
+    ...options,
+    input: "src/index.js",
     output: {
-      ...config.output,
-      file: `dist/${meta.name}.min.js`
+      ...options.output,
+      name: "versor",
+      indent: false,
+      banner
     },
     plugins: [
-      ...config.plugins,
-      terser({
-        output: {
-          preamble: config.output.banner
-        }
-      })
+      RollupNode(),
+      ...(options.plugins ?? [])
     ]
-  }
+  };
+}
+
+export default [
+  config({
+    output: {
+      file: `dist/${meta.name}.mjs`,
+      format: "es"
+    }
+  }),
+  config({
+    output: {
+      file: `dist/${meta.name}.min.mjs`,
+      format: "es"
+    },
+    plugins: [
+      terser
+    ]
+  }),
+  config({
+    output: {
+      file: `dist/${meta.name}.js`,
+      format: "umd"
+    }
+  }),
+  config({
+    output: {
+      file: `dist/${meta.name}.min.js`,
+      format: "umd"
+    },
+    plugins: [
+      terser
+    ]
+  })
 ];
