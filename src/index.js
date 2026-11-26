@@ -1,5 +1,4 @@
 const acos = Math.acos,
-    asin = Math.asin,
     atan2 = Math.atan2,
     cos = Math.cos,
     hypot = Math.hypot,
@@ -7,8 +6,14 @@ const acos = Math.acos,
     min = Math.min,
     PI = Math.PI,
     sin = Math.sin,
+    sqrt = Math.sqrt,
     radians = PI / 180,
-    degrees = 180 / PI;
+    degrees = 180 / PI,
+    epsilon = 1e-12;
+
+function wrap(x) {
+  return x > PI ? x - 2 * PI : x < -PI ? x + 2 * PI : x;
+}
 
 class Versor {
   static fromCartesian([x, y, z]) {
@@ -28,11 +33,20 @@ class Versor {
       cl * cp * sg - sl * sp * cg
     ];
   }
+  // (λ + γ) / 2 is undetermined at the north pole, and (λ - γ) / 2 at the south
+  // pole (gimbal lock); at a pole, γ = 0 and λ carries the whole rotation.
   static toAngles([a, b, c, d]) {
+    const x0 = a - c, y0 = b + d, x1 = a + c, y1 = b - d,
+        n = sqrt(x0 * x0 + y0 * y0), // zero at the north pole
+        s = sqrt(x1 * x1 + y1 * y1); // zero at the south pole
+    let u = atan2(y0, x0), // (λ + γ) / 2
+        v = atan2(y1, x1); // (λ - γ) / 2
+    if (n <= epsilon * s) u = v;
+    else if (s <= epsilon * n) v = u;
     return [
-      atan2(2 * (a * b + c * d), 1 - 2 * (b * b + c * c)) * degrees,
-      asin(max(-1, min(1, 2 * (a * c - d * b)))) * degrees,
-      atan2(2 * (a * d + b * c), 1 - 2 * (c * c + d * d)) * degrees
+      wrap(u + v) * degrees,
+      (2 * atan2(s, n) - PI / 2) * degrees,
+      wrap(u - v) * degrees
     ];
   }
   static interpolateAngles(a, b) {
