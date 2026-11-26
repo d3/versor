@@ -55,7 +55,7 @@ versor.rotation(versor([30, 90, -30])); // [60, 90, 0]
 
 ```
 
-If you use npm, `npm install versor`. You can also download the [latest release on GitHub](https://github.com/d3/versor/releases/latest). For vanilla HTML in modern browsers, import versor from esm.sh:
+If you use npm, `npm install versor`; versor is written in TypeScript, and the package includes its type declarations. You can also download the [latest release on GitHub](https://github.com/d3/versor/releases/latest). For vanilla HTML in modern browsers, import versor from esm.sh:
 
 ```html
 <script type="module">

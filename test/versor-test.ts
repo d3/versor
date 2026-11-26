@@ -2,7 +2,7 @@ import assert from "node:assert";
 import {it} from "vitest";
 import versor from "../src/index.js";
 
-function distance2 (a,b) {
+function distance2 (a: readonly number[], b: readonly number[]): number {
   return a
     .map(function(x,i) { return (x - b[i]) * (x - b[i]); })
     .reduce(function(a,b) { return a + b; }, 0);
@@ -48,7 +48,7 @@ it("delta tweening", () => {
 });
 
 // q and -q represent the same rotation
-function rotationDistance2(a, b) {
+function rotationDistance2(a: readonly number[], b: readonly number[]): number {
   return Math.min(distance2(a, b), distance2(a, b.map(x => -x)));
 }
 
@@ -87,7 +87,7 @@ it("rotation matches the previous formula away from the poles", () => {
 it("spinning around a pole does not drift https://github.com/d3/d3-geo/issues/194", () => {
   const spin = versor([0.5, 0, 0]);
   for (const p of [90, -90]) {
-    let r = [0, p, 0], q = versor(r);
+    let r: [number, number, number] = [0, p, 0], q = versor(r);
     for (let i = 0; i < 720; i++) {
       r = versor.rotation(versor.multiply(versor(r), spin));
       q = versor.multiply(q, spin);
